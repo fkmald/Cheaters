@@ -11,10 +11,11 @@
 
 using namespace std;
 
-vector<char> Chunking
+//vector<char> Chunking
 /*function... might want it in some class?*/
 int getdir (string dir, vector<string> &files)
 {
+
     DIR *dp;
     struct dirent *dirp;
     if((dp  = opendir(dir.c_str())) == NULL) {
@@ -28,21 +29,41 @@ int getdir (string dir, vector<string> &files)
     closedir(dp);
     return 0;
 }
-
-int main(int argc, char *argv[])
+//int argc, char *argv[]
+int main()
 {
-    int n = argv[2];
+    InitHashTable ();
+    int n = 6;
     string dir = string("sm_doc_set");
     vector<string> files = vector<string>();
 
     getdir(dir,files);
-
-    for (unsigned int i = 0 ;i < files.size();i++) {
+    //files[1].erase();
+  //  files[0].erase();
+    for (unsigned int i = 2 ;i < files.size();i++) {
+        vector<string> chunk;
+        string word;
         cout << i << files[i] << endl; //
-        ofstream File;
-        File.open (files[i]);
-        while (fgets)
+        ifstream File;
+        string path = dir + "/" + files[i];
+        File.open (path.c_str());  // opens file
+        int index = 0;
+        while (File >> word){
+            if (index < n){
+                chunk.push_back(word);
+                index++;
+            }
+            else{
+                string finalC = Chunking(chunk, n);
+                unsigned int result = Hashing(finalC);
+                //place in to table
+                chunk[0].erase();
+                chunk.push_back(word);
+            }
+        }
 
     }
+
+
     return 0;
 }
