@@ -32,7 +32,9 @@ int getdir (string dir, vector<string> &files)
 //int argc, char *argv[]
 int main()
 {
-    InitHashTable ();
+
+    ChunkNode HashTable[MAX];
+    InitHashTable (HashTable);
     int n = 6;
     string dir = string("sm_doc_set");
     vector<string> files = vector<string>();
@@ -56,7 +58,7 @@ int main()
             else{
                 string finalC = Chunking(chunk, n);
                 unsigned int result = Hashing(finalC);
-                //place in to table
+                placeInHashTable(result, i, HashTable);
                 chunk[0].erase();
                 chunk.push_back(word);
             }
@@ -64,6 +66,24 @@ int main()
 
     }
 
+    int gridCheck [files.size()][files.size()];
+    gridInit(gridCheck, files.size());
+
+    for (int transverse =0; transverse < MAX; transverse++){
+        if (HashTable[transverse].i != NULL){
+            ChunkNode *temp = &HashTable[transverse];
+            while (temp != NULL){
+                ChunkNode *temp2 = temp->next;
+                while (temp2 != NULL){
+                    gridCheck[temp.i][temp2.i]++;
+                    temp2 = temp2->next;
+                }
+                temp = temp->next;
+            }
+
+        }
+
+    }
 
     return 0;
 }

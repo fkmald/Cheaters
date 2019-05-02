@@ -9,11 +9,10 @@ using namespace std;
 
 #ifndef CHEATERS_QUEU_H
 #define CHEATERS_QUEU_H
-int MAX = 50000;
-int HashTable[MAX];
+int MAX = 50000;];
 struct ChunkNode
 {
-    vector <char> c;
+    int i;
     ChunkNode *next;
 };
 
@@ -44,9 +43,41 @@ unsigned int Hashing (const string & chunk){
     return result;
 }
 
-void InitHashTable (){
-    for ( int i = 0; i < MAX; i++)
-        HashTable[i]= NULL;
+
+void InitHashTable (ChunkNode HashTable[]){
+    for ( int j = 0; j < MAX; j++)
+        HashTable[j].i = NULL;
+        //HashTable[j].next = NULL;
+}
+
+void gridInit (int grid[], int size){
+    for (int i = 0; i < size; i++) {
+        for (int j = 0; j < size; j++) {
+            grid[i][j] = 0;
+        }
+    }
+}
+
+void placeInHashTable (int result, int index, ChunkNode table[]){
+    bool flag = false;
+    if(table[result].i != NULL){
+        ChunkNode *temp = &table[result];
+        while(temp != NULL){
+            if(temp->i == index){
+                temp = NULL;
+                flag = true;
+            }
+            else{
+                temp = temp->next;
+            }
+        }
+    }
+    if(!flag) { //if the index of the file isn't already there
+        ChunkNode *slot = new ChunkNode();
+        slot->i = index;
+        slot->next = table[result];
+        table[result] = slot;
+    }
 }
 
 #endif //CHEATERS_QUEU_H
