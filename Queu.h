@@ -9,7 +9,7 @@ using namespace std;
 
 #ifndef CHEATERS_QUEU_H
 #define CHEATERS_QUEU_H
-int MAX = 50000;];
+int MAX = 50000;
 struct ChunkNode
 {
     int i;
@@ -19,15 +19,15 @@ struct ChunkNode
 ChunkNode *headChunk;  //the head pointer
 ChunkNode *tailChunk;
 
-string Chunking(vector<string> chunk, int n){
+string Chunking(vector<string> chunk, int n, int place){
     string newChunk;
     string word;
-    for (int i=0; i<n; i++){ // going through vector
+    for (int i=place; i<(place+n); i++){ // going through vector
         word = chunk.at(i);
         int length = word.length();
         for (int j = 0; j< length; j++){
             if (isalnum(word[j]))
-                newChunk += word;
+                newChunk += tolower(word[j]);
         }
     }
 
@@ -37,35 +37,33 @@ string Chunking(vector<string> chunk, int n){
 unsigned int Hashing (const string & chunk){
     unsigned int result = 0;
     for (int i = 0; i < chunk.size(); i++){
-        result += chunk[i] * (pow(7,i);
-        result = result % MAX;
+        result += chunk[i] * (pow(7,i%11));
     }
+    result = result % MAX;
     return result;
 }
 
 
-void InitHashTable (ChunkNode HashTable[]){
+void InitHashTable (ChunkNode* HashTable[]){
     for ( int j = 0; j < MAX; j++)
-        HashTable[j].i = NULL;
-        //HashTable[j].next = NULL;
+        //HashTable[j].i = -1;
+        HashTable[j] = NULL;
 }
 
-void gridInit (int grid[], int size){
-    for (int i = 0; i < size; i++) {
-        for (int j = 0; j < size; j++) {
-            grid[i][j] = 0;
-        }
-    }
-}
+//void gridInit (int *grid[], int size){
 
-void placeInHashTable (int result, int index, ChunkNode table[]){
+//}
+
+void placeInHashTable (int result, int index, ChunkNode* table[]){
     bool flag = false;
-    if(table[result].i != NULL){
-        ChunkNode *temp = &table[result];
-        while(temp != NULL){
+    if(table[result] != NULL){
+        ChunkNode *temp = table[result];
+        while(temp->next != NULL){
             if(temp->i == index){
-                temp = NULL;
+                //temp = NULL;
                 flag = true;
+                temp->next = NULL;
+
             }
             else{
                 temp = temp->next;
@@ -74,8 +72,9 @@ void placeInHashTable (int result, int index, ChunkNode table[]){
     }
     if(!flag) { //if the index of the file isn't already there
         ChunkNode *slot = new ChunkNode();
+        ChunkNode *temp = table[result];
         slot->i = index;
-        slot->next = table[result];
+        slot->next = temp;
         table[result] = slot;
     }
 }
